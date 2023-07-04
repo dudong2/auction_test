@@ -98,6 +98,25 @@ func TestAuctionWorks(t *testing.T) {
 	assertAttribute(t, "owner", addr1, res.Events[2].Attributes[3])
 	assertAttribute(t, "token_id", "nft", res.Events[2].Attributes[4])
 
+	// execute approve
+	cosmwasmExecuteMsg = fmt.Sprintf(`{"approve":{"spender":"%s","token_id":"nft"}}`, callerContractAddress)
+	executeMsg = MsgExecuteContract{
+		Sender:   addr1,
+		Contract: calleeContractAddress,
+		Msg:      []byte(cosmwasmExecuteMsg),
+		Funds:    nil,
+	}
+	res, err = h(data.ctx, &executeMsg)
+	require.NoError(t, err)
+
+	assert.Equal(t, len(res.Events), 3)
+	assert.Equal(t, "wasm", res.Events[2].Type)
+	assert.Equal(t, len(res.Events[2].Attributes), 5)
+	assertAttribute(t, "action", "approve", res.Events[2].Attributes[1])
+	assertAttribute(t, "sender", addr1, res.Events[2].Attributes[2])
+	assertAttribute(t, "spender", callerContractAddress, res.Events[2].Attributes[3])
+	assertAttribute(t, "token_id", "nft", res.Events[2].Attributes[4])
+
 	// execute start_auction
 	cosmwasmExecuteMsg = fmt.Sprintf(`{"start_auction":{"expiration_time":1,"cw721_address":"%s","token_id":"nft","start_bid":100}}`, calleeContractAddress)
 	executeMsg = MsgExecuteContract{
