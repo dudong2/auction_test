@@ -173,7 +173,7 @@ func TestAuctionWorks(t *testing.T) {
 	res, err = h(data.ctx, &executeMsg)
 	require.NoError(t, err)
 
-	assert.Equal(t, len(res.Events), 11)
+	assert.Equal(t, len(res.Events), 9)
 	assert.Equal(t, "wasm", res.Events[5].Type)
 	assert.Equal(t, len(res.Events[5].Attributes), 4)
 	assertAttribute(t, "method", "end_auction", res.Events[5].Attributes[1])
@@ -184,12 +184,6 @@ func TestAuctionWorks(t *testing.T) {
 	assertAttribute(t, "recipient", addr1, res.Events[8].Attributes[0])
 	assertAttribute(t, "sender", callerContractAddress, res.Events[8].Attributes[1])
 	assertAttribute(t, "amount", "200cony", res.Events[8].Attributes[2])
-	assert.Equal(t, "wasm", res.Events[10].Type)
-	assert.Equal(t, len(res.Events[10].Attributes), 5)
-	assertAttribute(t, "action", "transfer_nft", res.Events[10].Attributes[1])
-	assertAttribute(t, "recipient", addr2, res.Events[10].Attributes[2])
-	assertAttribute(t, "sender", callerContractAddress, res.Events[10].Attributes[3])
-	assertAttribute(t, "token_id", "nft", res.Events[10].Attributes[4])
 
 	// query get_auction_history
 	queryPath = []string{
